@@ -30,7 +30,7 @@ export const Input = ({
         id={inputId}
         type={type}
         placeholder={placeholder}
-        className="border border-gray-300 rounded-md p-2 w-full"
+        className="border border-gray-300 bg-white rounded-md p-2 w-full"
         {...props}
       />
     </div>

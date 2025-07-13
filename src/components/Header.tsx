@@ -1,8 +1,7 @@
 import { Link } from '@tanstack/react-router'
-import ThemeButton from './ThemeButton'
-import ProfileIcon from './profile/ProfileIcon'
+import { ThemeButton, ProfileIcon } from '@/components'
 
-export default function Header() {
+export const Header = () => {
   return (
     <header className="p-2  flex gap-2 bg-white text-black shadow">
       <nav className="flex flex-row w-screen justify-between">

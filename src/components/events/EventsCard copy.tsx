@@ -1,5 +1,3 @@
-import { Card } from '../Card'
-
 interface EventsCardProps {
   // Define any props that the EventsCard component might need
   mes: string
@@ -16,7 +14,7 @@ interface EventsCardProps {
 
 export const EventsCard = ({ mes, anio, eventos }: EventsCardProps) => {
   return (
-    <Card>
+    <div className="border border-gray-300 bg-white shadow-md rounded-lg p-4 mb-4">
       <h2 className="text-xl font-semibold mb-2">
         {mes} {anio}
       </h2>
@@ -41,6 +39,6 @@ export const EventsCard = ({ mes, anio, eventos }: EventsCardProps) => {
         <p>Mes:</p>
         <p>Global:</p>
       </div>
-    </Card>
+    </div>
   )
 }
