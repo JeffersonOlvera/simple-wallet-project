@@ -21,11 +21,11 @@ export const Input = ({
 
   return (
     <div
-      className={`${block ? 'flex flex-col' : 'flex items-center gap-2'} ${className}`}
+      className={`${block ? 'flex flex-col gap-2' : 'flex items-center gap-2'} ${className}`}
     >
-      <label htmlFor={inputId} className="text-sm font-medium text-gray-700">
+      {/* <label htmlFor={inputId} className="text-sm font-medium text-gray-700">
         {label}
-      </label>
+      </label> */}
       <input
         id={inputId}
         type={type}

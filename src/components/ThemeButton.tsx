@@ -1,4 +1,7 @@
 import React from 'react'
+import { Moon, Sun } from 'lucide-react'
+import { cn } from '@/lib/utils'
+import useAppStore from '@/store/index'
 
 const handleChangeTheme: React.MouseEventHandler<HTMLButtonElement> = () => {
   const currentTheme = document.documentElement.getAttribute('data-theme')
@@ -9,13 +12,23 @@ const handleChangeTheme: React.MouseEventHandler<HTMLButtonElement> = () => {
 }
 
 export const ThemeButton = () => {
+  const { setTheme, role, theme } = useAppStore()
+
   return (
     <div>
       <button
-        className="px-2 py-2 rounded-full bg-gray-800 hover:bg-gray-300 transition-colors"
-        onClick={handleChangeTheme}
+        className={cn(
+          'rounded-4xl w-8 h-8 cursor-pointer',
+          // role === 'admin' ? 'bg-red-500 text-white' : 'bg-blue-500 text-white',
+        )}
+        onClick={() => {
+          setTheme(theme === 'light' ? 'dark' : 'light')
+          console.log(
+            `Theme changed to: ${theme === 'light' ? 'dark' : 'light'}`,
+          )
+        }}
       >
-        🌙
+        {theme === 'light' ? <Moon /> : <Sun />}
       </button>
     </div>
   )

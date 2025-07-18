@@ -1,7 +1,7 @@
-import { Card } from '../Card'
+import { Card } from '@/components/Card'
+import { EventsCardBody, EventsCardTitle } from '@/components/events/card'
 
 interface EventsCardProps {
-  // Define any props that the EventsCard component might need
   mes: string
   anio: string
   eventos: Array<{
@@ -16,26 +16,26 @@ interface EventsCardProps {
 
 export const EventsCard = ({ mes, anio, eventos }: EventsCardProps) => {
   return (
-    <Card>
-      <h2 className="text-xl font-semibold mb-2">
-        {mes} {anio}
-      </h2>
+    <Card className="">
+      <EventsCardTitle mes={mes} anio={anio} />
 
-      <hr className="mb-4" />
-      {eventos.map((evento) => (
-        <div className="flex border-b border-gray-200 py-2 " key={evento.id}>
-          <div>
-            <h3 className="font-semibold">{evento.titulo}</h3>
-            {evento.fecha && <p>Fecha: {evento.fecha}</p>}
-            {/* <p>{evento.descripcion}</p> */}
-          </div>
+      <hr className="mb-4 text-gray-200" />
 
-          {evento.cantidad && <p>${evento.cantidad}</p>}
-          {/* {evento.tipo && <p>Tipo: {evento.tipo}</p>} */}
-        </div>
-      ))}
-      <hr className="my-4" />
-      <div className="mt-4">
+      <div className="flex flex-col gap-2 my-4">
+        {eventos.map((evento) => (
+          <EventsCardBody
+            key={evento.id}
+            titulo={evento.titulo}
+            fecha={evento.fecha}
+            cantidad={evento.cantidad}
+            tipo={evento.tipo}
+          />
+        ))}
+      </div>
+
+      <hr className="mb-4 text-gray-200" />
+
+      <div className="mt-4 px-2">
         <p>Ingreso:</p>
         <p>Gasto:</p>
         <p>Mes:</p>

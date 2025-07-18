@@ -1,22 +1,33 @@
-// interface EventsCardBodyProps {
-//   props: Event
-// }
+interface Props extends React.ComponentPropsWithoutRef<'div'> {
+  titulo: string
+  fecha?: string
+  descripcion?: string
+  cantidad?: string
+  tipo?: 'Egreso' | 'Ingreso'
+}
 
-// export const EventsCardBody = ({ props }: EventsCardBodyProps) => {
-//   return (
-//     <div>
-//       {props.map((prop) => (
-//         <div className="flex border-b border-gray-200 py-2 " key={prop.id}>
-//           <div>
-//             <h3 className="font-semibold">{prop.titulo}</h3>
-//             {prop.fecha && <p>Fecha: {prop.fecha}</p>}
-//             {/* <p>{prop.descripcion}</p> */}
-//           </div>
-
-//           {prop.cantidad && <p>${prop.cantidad}</p>}
-//           {/* {prop.tipo && <p>Tipo: {prop.tipo}</p>} */}
-//         </div>
-//       ))}
-//     </div>
-//   )
-// }
+export const EventsCardBody = ({
+  titulo,
+  fecha,
+  //   descripcion,
+  cantidad,
+  tipo,
+}: Props) => {
+  return (
+    <div className="flex py-2 w-full bg-gray-50 hover:bg-gray-100 px-2 rounded-lg">
+      <div className="w-3/4">
+        <h3 className="font-semibold">{titulo}</h3>
+        {fecha && <p>{fecha}</p>}
+      </div>
+      <p
+        className={`${tipo === 'Ingreso' ? 'text-green-600' : 'text-red-400'} text-right w-1/4`}
+      >
+        {cantidad && (
+          <span className="text-sm font-bold ">
+            {tipo === 'Ingreso' ? '' : '-'} ${cantidad}
+          </span>
+        )}
+      </p>
+    </div>
+  )
+}
