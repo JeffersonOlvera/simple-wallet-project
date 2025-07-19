@@ -49,32 +49,38 @@ function RouteComponent() {
           id: id,
         })
       }
-      queryClient.invalidateQueries({
-        queryKey: ['events'],
-      })
       return true
     },
-    onSettled: (_, error) => {
-      if (error) {
-        notifications.error({
-          title: 'Error',
-          message: error.message || 'An error occurred while saving the event',
+    onSuccess: async () => {
+      // noti
+      if (mode === 'create') {
+        notifications.success({
+          title: 'Success',
+          message: 'Evento creado exitosamente!',
         })
-      } else {
-        if (mode === 'create') {
-          notifications.success({
-            title: 'Success',
-            message: 'Evento creado exitosamente!',
-          })
-        }
-        if (mode === 'update') {
-          notifications.success({
-            title: 'Success',
-            message: 'Evento actualizado exitosamente!',
-          })
-        }
-        navigate({ to: '/events' })
       }
+      if (mode === 'update') {
+        notifications.success({
+          title: 'Success',
+          message: 'Evento actualizado exitosamente!',
+        })
+      }
+
+      await queryClient.invalidateQueries({
+        queryKey: ['events'],
+      })
+
+      await queryClient.invalidateQueries({
+        queryKey: ['candidates'],
+      })
+
+      navigate({ to: '/events' })
+    },
+    onError: (error) => {
+      notifications.error({
+        title: 'Error',
+        message: error.message || 'An error occurred while saving the event',
+      })
     },
   })
 
