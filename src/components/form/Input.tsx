@@ -21,7 +21,7 @@ function Input({ className, type, label, ...props }: InputProps) {
   return (
     <div>
       {label && (
-        <label className="mb-2 block text-sm font-medium text-gray-700">
+        <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300 transition-colors">
           {label}
         </label>
       )}
@@ -29,9 +29,29 @@ function Input({ className, type, label, ...props }: InputProps) {
         type={type}
         data-slot="input"
         className={cn(
-          'file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 flex min-w-0 rounded-md bg-transparent px-3 py-1 text-base transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm',
-          'focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]',
-          type !== 'checkbox' && 'h-9 border-input border shadow-xs w-full',
+          // Base styles
+          'flex min-w-0 rounded-md bg-white dark:bg-gray-700 px-3 py-2 text-base transition-all outline-none',
+          'text-gray-900 dark:text-gray-100',
+          'placeholder:text-gray-500 dark:placeholder:text-gray-400',
+          'border border-gray-300 dark:border-gray-600',
+          'shadow-sm dark:shadow-lg',
+          // Focus states
+          'focus:border-purple-500 dark:focus:border-purple-400',
+          'focus:ring-2 focus:ring-purple-500/20 dark:focus:ring-purple-400/20',
+          // Error states
+          error &&
+            'border-red-500 dark:border-red-400 focus:border-red-500 dark:focus:border-red-400',
+          error && 'focus:ring-red-500/20 dark:focus:ring-red-400/20',
+          // Disabled states
+          'disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50',
+          'disabled:bg-gray-50 dark:disabled:bg-gray-800',
+          // File input styles
+          'file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium',
+          'file:text-gray-700 dark:file:text-gray-300',
+          // Height for non-checkbox inputs
+          type !== 'checkbox' && 'h-10',
+          // Selection styles
+          'selection:bg-purple-500 selection:text-white',
           className,
         )}
         {...props}
@@ -45,7 +65,11 @@ function Input({ className, type, label, ...props }: InputProps) {
         }}
         onBlur={onBlur}
       />
-      {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
+      {error && (
+        <p className="mt-2 text-sm text-red-600 dark:text-red-400 transition-colors">
+          {error}
+        </p>
+      )}
     </div>
   )
 }

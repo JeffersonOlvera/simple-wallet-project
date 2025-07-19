@@ -23,14 +23,11 @@ export const Input = ({
     <div
       className={`${block ? 'flex flex-col gap-2' : 'flex items-center gap-2'} ${className}`}
     >
-      {/* <label htmlFor={inputId} className="text-sm font-medium text-gray-700">
-        {label}
-      </label> */}
       <input
         id={inputId}
         type={type}
         placeholder={placeholder}
-        className="border border-gray-300 bg-white rounded-md p-2 w-full"
+        className="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 rounded-md p-2 w-full transition-colors focus:ring-2 focus:ring-purple-500 dark:focus:ring-purple-400 focus:border-transparent"
         {...props}
       />
     </div>

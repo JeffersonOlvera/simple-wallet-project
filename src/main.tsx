@@ -6,6 +6,8 @@ import { RouterProvider, createRouter } from '@tanstack/react-router'
 import { routeTree } from './routeTree.gen'
 import * as TanstackQuery from './integrations/tanstack-query/root-provider.tsx'
 
+import * as Mantine from './integrations/mantine/root-provider.tsx'
+
 import './styles.css'
 import reportWebVitals from './reportWebVitals.ts'
 
@@ -35,7 +37,9 @@ if (rootElement && !rootElement.innerHTML) {
   root.render(
     <StrictMode>
       <TanstackQuery.Provider>
-        <RouterProvider router={router} />
+        <Mantine.Provider>
+          <RouterProvider router={router} />
+        </Mantine.Provider>
       </TanstackQuery.Provider>
     </StrictMode>,
   )

@@ -8,7 +8,6 @@ import { CreateEventSchema } from '@/types/event.type'
 
 import DataRepo from '@/api/datasource'
 import { useAppForm } from '@/hooks/form'
-// import AnalyticReport from '@/components/form/analytic-report'
 import { notifications } from '@/lib/notification'
 
 export const Route = createFileRoute('/events/create/$id')({
@@ -59,23 +58,21 @@ function RouteComponent() {
       if (error) {
         notifications.error({
           title: 'Error',
-          message:
-            error.message || 'An error occurred while saving the candidate',
+          message: error.message || 'An error occurred while saving the event',
         })
       } else {
         if (mode === 'create') {
           notifications.success({
             title: 'Success',
-            message: 'Candidate created successfully!',
+            message: 'Evento creado exitosamente!',
           })
         }
         if (mode === 'update') {
           notifications.success({
             title: 'Success',
-            message: 'Candidate updated successfully!',
+            message: 'Evento actualizado exitosamente!',
           })
         }
-        // Redirect to the events list or another page
         navigate({ to: '/events' })
       }
     },
@@ -93,7 +90,7 @@ function RouteComponent() {
       } else {
         notifications.success({
           title: 'Success',
-          message: 'Event deleted successfully!',
+          message: 'Evento eliminado exitosamente!',
         })
         navigate({ to: '/events' })
       }
@@ -117,14 +114,6 @@ function RouteComponent() {
 
   useEffect(() => {
     if (data) {
-      // setForm({
-      //   name: data.name,
-      //   age: data.age,
-      //   experience: data.experience,
-      //   status: data.status,
-      //   skills: data.skills,
-      //   working: data.working,
-      // })
       form.reset(
         {
           nombre: data.nombre,
@@ -140,8 +129,6 @@ function RouteComponent() {
 
   const dataForm = useStore(form.store, (state) => state.values)
 
-  // const onCopyCallback = React.useCallback(copyData, [dataForm.working])
-
   const analyticValueMemo = React.useMemo(() => {
     return {
       cantidad: dataForm.cantidad,
@@ -151,7 +138,7 @@ function RouteComponent() {
 
   const handleDelete = React.useCallback(() => {
     const isConfirmed = window.confirm(
-      'Are you sure you want to delete this event? This action cannot be undone.',
+      '¿Estás seguro de que deseas eliminar este evento? Esta acción no se puede deshacer.',
     )
 
     if (isConfirmed) {
@@ -160,110 +147,156 @@ function RouteComponent() {
   }, [deleteEvent])
 
   return (
-    <div className="flex flex-row gap-x-4">
-      <form
-        className="flex flex-col gap-4 p-4 min-w-[450px]"
-        onSubmit={(e) => {
-          e.preventDefault()
-          form.handleSubmit()
-        }}
-      >
-        <h1 className="text-2xl font-bold">Form</h1>
+    <div className="min-h-screen bg-gray-100 dark:bg-gray-900 transition-colors py-6 px-4">
+      <div className="max-w-2xl mx-auto">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg dark:shadow-xl border border-gray-200 dark:border-gray-700 transition-colors">
+          {/* Header */}
+          <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+              {mode === 'create' ? 'Crear Evento' : 'Editar Evento'}
+            </h1>
+            <p className="text-gray-600 dark:text-gray-400 mt-1">
+              {mode === 'create'
+                ? 'Complete la información para crear un nuevo evento'
+                : 'Modifique la información del evento'}
+            </p>
+          </div>
 
-        <form.AppField
-          name="nombre"
-          children={(field) => (
-            <field.Input
-              type="text"
-              label="Nombre"
-              placeholder="Ingrese su nombre"
-              className="w-full"
-            />
-          )}
-        />
-        <form.AppField
-          name="descripccion"
-          children={(field) => (
-            <field.Input
-              type="text"
-              label="Descripción"
-              placeholder="Ingrese su descripción"
-              className="w-full"
-            />
-          )}
-        />
-        <form.AppField
-          name="cantidad"
-          children={(field) => (
-            <field.Input
-              type="text"
-              label="Cantidad"
-              placeholder="Ingrese su cantidad"
-              className="w-full"
-            />
-          )}
-        />
-        <form.AppField
-          name="fecha"
-          children={(field) => (
-            <field.Input
-              type="date"
-              label="Fecha"
-              placeholder="Ingrese su fecha"
-              className="w-full"
-            />
-          )}
-        />
-        <form.AppField
-          name="tipo"
-          children={(field) => (
-            <field.Select
-              options={[
-                { value: 'ingreso', label: 'Ingreso' },
-                { value: 'gasto', label: 'Gasto' },
-              ]}
-              className="w-full"
-            />
-          )}
-        />
-
-        <form.AppForm>
-          <form.SubmitButton
-            text={
-              isPending
-                ? 'Saving..'
-                : (mode === 'create' ? 'Create' : 'Update') + ' Candidate'
-            }
-            type="submit"
-            className="mt-4 w-full bg-purple-500 hover:bg-purple-600 text-white font-semibold py-2 px-4 rounded"
-          />
-        </form.AppForm>
-
-        {mode === 'update' && (
-          <button
-            type="button"
-            onClick={handleDelete}
-            disabled={isDeleting || isPending}
-            className="px-4 py-2 bg-red-500 hover:bg-red-600 disabled:bg-red-300 text-white font-semibold rounded transition-colors"
+          {/* Form */}
+          <form
+            className="p-6 space-y-6"
+            onSubmit={(e) => {
+              e.preventDefault()
+              form.handleSubmit()
+            }}
           >
-            {isDeleting ? 'Deleting...' : 'Delete Candidate'}
-          </button>
-        )}
-      </form>
+            <form.AppField
+              name="nombre"
+              children={(field) => (
+                <field.Input
+                  type="text"
+                  label="Nombre del evento"
+                  placeholder="Ej: Sueldo, Alquiler, Compras..."
+                  className="w-full"
+                />
+              )}
+            />
 
-      {/* <AnalyticReport data={analyticValueMemo} onCopy={onCopyCallback} /> */}
+            <form.AppField
+              name="descripccion"
+              children={(field) => (
+                <field.Input
+                  type="text"
+                  label="Descripción (opcional)"
+                  placeholder="Descripción detallada del evento"
+                  className="w-full"
+                />
+              )}
+            />
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <form.AppField
+                name="cantidad"
+                children={(field) => (
+                  <field.Input
+                    type="number"
+                    label="Cantidad"
+                    placeholder="0.00"
+                    className="w-full"
+                    step="0.01"
+                    min="0"
+                  />
+                )}
+              />
+
+              <form.AppField
+                name="fecha"
+                children={(field) => (
+                  <field.Input type="date" label="Fecha" className="w-full" />
+                )}
+              />
+            </div>
+
+            <form.AppField
+              name="tipo"
+              children={(field) => (
+                <field.Select
+                  label="Tipo de evento"
+                  options={[
+                    { value: 'ingreso', label: 'Ingreso' },
+                    { value: 'gasto', label: 'Gasto' },
+                  ]}
+                  className="w-full"
+                />
+              )}
+            />
+
+            {/* Buttons */}
+            <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t border-gray-200 dark:border-gray-700">
+              <form.AppForm>
+                <form.SubmitButton
+                  text={
+                    isPending
+                      ? 'Guardando...'
+                      : mode === 'create'
+                        ? 'Crear Evento'
+                        : 'Actualizar Evento'
+                  }
+                  type="submit"
+                  className="flex-1 bg-purple-600 hover:bg-purple-700 dark:bg-purple-500 dark:hover:bg-purple-600 text-white font-semibold py-3 px-6 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  disabled={isPending}
+                />
+              </form.AppForm>
+
+              <button
+                type="button"
+                onClick={() => navigate({ to: '/events' })}
+                className="flex-1 sm:flex-none px-6 py-3 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 rounded-lg font-medium transition-colors"
+              >
+                Cancelar
+              </button>
+
+              {mode === 'update' && (
+                <button
+                  type="button"
+                  onClick={handleDelete}
+                  disabled={isDeleting || isPending}
+                  className="flex-1 sm:flex-none px-6 py-3 bg-red-600 hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600 disabled:bg-red-300 dark:disabled:bg-red-400 text-white font-semibold rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {isDeleting ? 'Eliminando...' : 'Eliminar'}
+                </button>
+              )}
+            </div>
+          </form>
+        </div>
+
+        {/* Analytics/Preview Panel (opcional) */}
+        {(dataForm.cantidad > 0 || dataForm.fecha) && (
+          <div className="mt-6 bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700 p-4 transition-colors">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-3">
+              Vista previa
+            </h3>
+            <div className="grid grid-cols-2 gap-4 text-sm">
+              <div>
+                <span className="text-gray-600 dark:text-gray-400">
+                  Cantidad:
+                </span>
+                <p className="font-medium text-gray-900 dark:text-gray-100">
+                  ${dataForm.cantidad?.toLocaleString('es-ES') || '0'}
+                </p>
+              </div>
+              <div>
+                <span className="text-gray-600 dark:text-gray-400">Fecha:</span>
+                <p className="font-medium text-gray-900 dark:text-gray-100">
+                  {dataForm.fecha
+                    ? new Date(dataForm.fecha).toLocaleDateString('es-ES')
+                    : 'No seleccionada'}
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   )
-
-  function copyData(value: string) {
-    navigator.clipboard
-      .writeText(`${value} Modo: ${mode}`)
-      .then(() =>
-        notifications.success({
-          title: 'Data copied',
-          message: 'Value has been copied to clipboard',
-        }),
-      )
-      .catch((err) => console.error('Failed to copy: ', err))
-  }
 }

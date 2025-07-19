@@ -1,25 +1,62 @@
 import { create } from 'zustand'
-
 import type { StoreType } from '../types/store'
 
-const useAppStore = create<StoreType>((set) => ({
-  role: 'user',
-  theme: 'light',
-  setTheme: (theme) =>
-    set((state) => {
-      localStorage.setItem('theme', theme)
+// Función para obtener el tema inicial
+const getInitialTheme = (): 'light' | 'dark' => {
+  // Verificar si estamos en el browser
+  if (typeof window === 'undefined') return 'light'
 
-      if (theme === 'dark') {
-        document.documentElement.classList.add('dark')
-      } else {
-        document.documentElement.classList.remove('dark')
-      }
+  // Verificar localStorage primero
+  const savedTheme = localStorage.getItem('theme')
+  if (savedTheme === 'dark' || savedTheme === 'light') {
+    return savedTheme
+  }
 
-      return {
-        ...state,
-        theme,
-      }
-    }),
-}))
+  // Verificar preferencia del sistema
+  if (
+    window.matchMedia &&
+    window.matchMedia('(prefers-color-scheme: dark)').matches
+  ) {
+    return 'dark'
+  }
+
+  return 'light'
+}
+
+// Función para aplicar el tema
+const applyTheme = (theme: 'light' | 'dark') => {
+  if (typeof window === 'undefined') return
+
+  const root = document.documentElement
+
+  if (theme === 'dark') {
+    root.classList.add('dark')
+    root.setAttribute('data-theme', 'dark')
+  } else {
+    root.classList.remove('dark')
+    root.setAttribute('data-theme', 'light')
+  }
+
+  localStorage.setItem('theme', theme)
+}
+
+const useAppStore = create<StoreType>((set) => {
+  // Inicializar tema
+  const initialTheme = getInitialTheme()
+  applyTheme(initialTheme)
+
+  return {
+    role: 'user',
+    theme: initialTheme,
+    setTheme: (theme) =>
+      set((state) => {
+        applyTheme(theme)
+        return {
+          ...state,
+          theme,
+        }
+      }),
+  }
+})
 
 export default useAppStore
