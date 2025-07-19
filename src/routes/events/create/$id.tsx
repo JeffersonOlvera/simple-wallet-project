@@ -181,6 +181,51 @@ function RouteComponent() {
             />
           )}
         />
+        <form.AppField
+          name="descripccion"
+          children={(field) => (
+            <field.Input
+              type="text"
+              label="Descripción"
+              placeholder="Ingrese su descripción"
+              className="w-full"
+            />
+          )}
+        />
+        <form.AppField
+          name="cantidad"
+          children={(field) => (
+            <field.Input
+              type="text"
+              label="Cantidad"
+              placeholder="Ingrese su cantidad"
+              className="w-full"
+            />
+          )}
+        />
+        <form.AppField
+          name="fecha"
+          children={(field) => (
+            <field.Input
+              type="date"
+              label="Fecha"
+              placeholder="Ingrese su fecha"
+              className="w-full"
+            />
+          )}
+        />
+        <form.AppField
+          name="tipo"
+          children={(field) => (
+            <field.Select
+              options={[
+                { value: 'ingreso', label: 'Ingreso' },
+                { value: 'gasto', label: 'Gasto' },
+              ]}
+              className="w-full"
+            />
+          )}
+        />
 
         <form.AppForm>
           <form.SubmitButton
