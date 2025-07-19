@@ -4,11 +4,21 @@ interface Props extends React.ComponentPropsWithoutRef<'div'> {
   descripcion?: string
   cantidad?: string
   tipo?: 'Egreso' | 'Ingreso'
+  onClick?: () => void // Añadir esta prop
 }
 
-export const EventsCardBody = ({ titulo, fecha, cantidad, tipo }: Props) => {
+export const EventsCardBody = ({
+  titulo,
+  fecha,
+  cantidad,
+  tipo,
+  onClick,
+}: Props) => {
   return (
-    <div className="flex py-2 w-full bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 px-2 rounded-lg transition-colors">
+    <div
+      className="flex py-2 w-full bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 px-2 rounded-lg transition-colors cursor-pointer"
+      onClick={onClick}
+    >
       <div className="w-3/4">
         <h3 className="font-semibold text-gray-900 dark:text-gray-100">
           {titulo}

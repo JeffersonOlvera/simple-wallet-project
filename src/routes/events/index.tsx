@@ -218,7 +218,7 @@ function RouteComponent() {
     <main className="bg-gray-100 dark:bg-gray-900 min-h-screen px-4 py-6 gap-4 flex flex-col transition-colors">
       <EventsForm />
 
-      <Link to="/events/create/$id" params={{ id: 'new' }}>
+      <Link to="/events/form/$id" params={{ id: 'new' }}>
         <Button
           label="+ Crear evento"
           variant="solid"
@@ -226,27 +226,22 @@ function RouteComponent() {
           className="md:hidden w-full"
         />
       </Link>
-
+      {/* Resumen de eventos */}
+      <div>
+        <p className="text-lg font-semibold text-gray-700 dark:text-gray-300">
+          Tienes {totalEvents} eventos en {totalMonths}{' '}
+          {totalMonths === 1 ? 'mes' : 'meses'}
+        </p>
+      </div>
       <EventsContainer>
-        {/* Resumen de eventos */}
-        <div className="mb-6">
-          <p className="text-lg font-semibold text-gray-700 dark:text-gray-300">
-            Tienes {totalEvents} eventos en {totalMonths}{' '}
-            {totalMonths === 1 ? 'mes' : 'meses'}
-          </p>
-        </div>
-
-        {/* Grid de tarjetas por mes */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {groupedEvents.map((monthData, index) => (
-            <EventsCard
-              key={`${monthData.anio}-${monthData.mes}`}
-              mes={monthData.mes}
-              anio={monthData.anio}
-              eventos={monthData.eventos}
-            />
-          ))}
-        </div>
+        {groupedEvents.map((monthData, _index) => (
+          <EventsCard
+            key={`${monthData.anio}-${monthData.mes}`}
+            mes={monthData.mes}
+            anio={monthData.anio}
+            eventos={monthData.eventos}
+          />
+        ))}
 
         {/* Mensaje cuando no hay eventos */}
         {groupedEvents.length === 0 && (

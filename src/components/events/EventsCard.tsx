@@ -1,6 +1,7 @@
 import { Card } from '@/components/Card'
 import { EventsCardBody, EventsCardTitle } from '@/components/events/card'
 import { useMemo } from 'react'
+import { useNavigate } from '@tanstack/react-router' // Añadir import
 
 interface EventsCardProps {
   mes: string
@@ -16,6 +17,8 @@ interface EventsCardProps {
 }
 
 export const EventsCard = ({ mes, anio, eventos }: EventsCardProps) => {
+  const navigate = useNavigate() // Añadir hook
+
   // Calcular totales del mes
   const totales = useMemo(() => {
     const ingresos = eventos
@@ -39,6 +42,13 @@ export const EventsCard = ({ mes, anio, eventos }: EventsCardProps) => {
     return `$${amount.toLocaleString('es-ES')}`
   }
 
+  const handleEventClick = (eventoId: string) => {
+    navigate({
+      to: '/events/form/$id',
+      params: { id: eventoId },
+    })
+  }
+
   return (
     <Card className="h-fit bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 transition-colors">
       <EventsCardTitle mes={mes} anio={anio} />
@@ -54,6 +64,7 @@ export const EventsCard = ({ mes, anio, eventos }: EventsCardProps) => {
               fecha={evento.fecha}
               cantidad={evento.cantidad}
               tipo={evento.tipo}
+              onClick={() => handleEventClick(evento.id)}
             />
           ))
         ) : (
@@ -99,14 +110,12 @@ export const EventsCard = ({ mes, anio, eventos }: EventsCardProps) => {
           </span>
         </div>
 
-        {/* Nota: El total global se calcularía en un estado superior si es necesario */}
         <div className="flex justify-between items-center">
           <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
             Global:
           </span>
           <span className="text-sm font-bold text-blue-600 dark:text-blue-400">
-            {formatCurrency(totales.mensual)}{' '}
-            {/* Temporal - sería la suma acumulada */}
+            {formatCurrency(totales.mensual)}
           </span>
         </div>
       </div>

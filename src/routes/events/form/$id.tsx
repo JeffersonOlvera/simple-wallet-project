@@ -9,8 +9,9 @@ import { CreateEventSchema } from '@/types/event.type'
 import DataRepo from '@/api/datasource'
 import { useAppForm } from '@/hooks/form'
 import { notifications } from '@/lib/notification'
+import { EventsCardBody } from '@/components/events'
 
-export const Route = createFileRoute('/events/create/$id')({
+export const Route = createFileRoute('/events/form/$id')({
   component: RouteComponent,
 })
 
@@ -18,7 +19,8 @@ const defaultValues: CreateEventType = {
   nombre: '',
   descripccion: '',
   cantidad: 0,
-  fecha: new Date(),
+  //prueba
+  fecha: new Date().toISOString().split('T')[0] as unknown as Date,
   tipo: 'ingreso',
 }
 
@@ -34,6 +36,8 @@ function RouteComponent() {
     enabled: mode === 'update',
     queryKey: ['event', id],
     queryFn: () => DataRepo.getEventById(id),
+    refetchOnMount: true,
+    refetchOnWindowFocus: true,
   })
 
   const queryClient = useQueryClient()
@@ -276,30 +280,22 @@ function RouteComponent() {
           </form>
         </div>
 
-        {/* Analytics/Preview Panel (opcional) */}
-        {(dataForm.cantidad > 0 || dataForm.fecha) && (
+        {/* Vista previa del evento */}
+        {(dataForm.cantidad > 0 || dataForm.fecha || dataForm.nombre) && (
           <div className="mt-6 bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700 p-4 transition-colors">
             <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-3">
               Vista previa
             </h3>
-            <div className="grid grid-cols-2 gap-4 text-sm">
-              <div>
-                <span className="text-gray-600 dark:text-gray-400">
-                  Cantidad:
-                </span>
-                <p className="font-medium text-gray-900 dark:text-gray-100">
-                  ${dataForm.cantidad?.toLocaleString('es-ES') || '0'}
-                </p>
-              </div>
-              <div>
-                <span className="text-gray-600 dark:text-gray-400">Fecha:</span>
-                <p className="font-medium text-gray-900 dark:text-gray-100">
-                  {dataForm.fecha
-                    ? new Date(dataForm.fecha).toLocaleDateString('es-ES')
-                    : 'No seleccionada'}
-                </p>
-              </div>
-            </div>
+            <EventsCardBody
+              titulo={dataForm.nombre || 'Nombre del evento'}
+              fecha={
+                dataForm.fecha
+                  ? dataForm.fecha.toString().split('-').reverse().join('/')
+                  : new Date().toLocaleDateString('es-ES')
+              }
+              cantidad={dataForm.cantidad?.toString() || '0'}
+              tipo={dataForm.tipo === 'ingreso' ? 'Ingreso' : 'Egreso'}
+            />
           </div>
         )}
       </div>

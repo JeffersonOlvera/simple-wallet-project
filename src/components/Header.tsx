@@ -19,7 +19,7 @@ export const Header = () => {
           </Link>
         </div>
         <div className="flex gap-2">
-          <Link to="/events/create/$id" params={{ id: 'new' }}>
+          <Link to="/events/form/$id" params={{ id: 'new' }}>
             <Button
               label="Crear evento"
               variant="outline"
