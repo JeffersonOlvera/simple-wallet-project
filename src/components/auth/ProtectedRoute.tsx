@@ -2,10 +2,6 @@ import React from 'react'
 import { Navigate } from '@tanstack/react-router'
 import useAuthStore from '@/store/auth.store'
 
-<<<<<<< HEAD
-
-=======
->>>>>>> e78b135853b8e78486e8d9af491a8c092221f566
 interface ProtectedRouteProps {
   children: React.ReactNode
 }

@@ -1,9 +1,4 @@
-<<<<<<< HEAD
 import { Link, Navigate, createFileRoute } from '@tanstack/react-router'
-=======
-import { createFileRoute } from '@tanstack/react-router'
-import { Navigate } from '@tanstack/react-router'
->>>>>>> e78b135853b8e78486e8d9af491a8c092221f566
 import useAuthStore from '@/store/auth.store'
 
 export const Route = createFileRoute('/')({
@@ -30,7 +25,6 @@ function App() {
           Controla tus ingresos y gastos, visualiza tus patrones de gasto y toma decisiones financieras informadas.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-<<<<<<< HEAD
           <Link to="/auth/login">
             <button className="bg-white text-purple-700 font-semibold py-4 px-8 rounded-lg hover:bg-purple-50 transition-colors shadow-lg">
               Iniciar Sesión
@@ -41,18 +35,6 @@ function App() {
               Crear Cuenta
             </button>
           </Link>
-=======
-          <Navigate to="/auth/login">
-            <button className="bg-white text-purple-700 font-semibold py-4 px-8 rounded-lg hover:bg-purple-50 transition-colors shadow-lg">
-              Iniciar Sesión
-            </button>
-          </Navigate>
-          <Navigate to="/auth/register">
-            <button className="border-2 border-white text-white font-semibold py-4 px-8 rounded-lg hover:bg-white hover:text-purple-700 transition-colors">
-              Crear Cuenta
-            </button>
-          </Navigate>
->>>>>>> e78b135853b8e78486e8d9af491a8c092221f566
         </div>
       </div>
     </div>
