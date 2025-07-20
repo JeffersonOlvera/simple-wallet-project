@@ -1,9 +1,9 @@
-import { EventsContainer, EventsForm, EventsCard, Button } from '@/components'
-import { createFileRoute, Link } from '@tanstack/react-router'
+import { Link, createFileRoute } from '@tanstack/react-router'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import type { EventType } from '@/types/event.type'
 import { getEvents } from '@/api/events'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { useCallback, useEffect, useState, useMemo } from 'react'
+import { Button, EventsCard, EventsContainer, EventsInitialBalance } from '@/components'
 import DataRepo from '@/api/datasource'
 import SearchInput from '@/components/SearchInput'
 import { Pagination } from '@/components/pagination'
@@ -115,10 +115,10 @@ function RouteComponent() {
   const { tipo } = Route.useSearch()
   const queryClient = useQueryClient()
 
-  // const [selectedCandidates, setSelectedCandidates] = useState<string[]>([])
+  // const [selectedevents, setSelectedevents] = useState<string[]>([])
 
-  const candidatesQuery = useQuery({
-    queryKey: ['candidates'],
+  const eventsQuery = useQuery({
+    queryKey: ['events'],
     queryFn: () => DataRepo.getEvents(),
     retry: 3,
     refetchOnWindowFocus: true,
@@ -140,7 +140,7 @@ function RouteComponent() {
   //         message: 'Candidate deleted successfully!',
   //       })
   //     }
-  //     queryClient.invalidateQueries({ queryKey: ['candidates'] })
+  //     queryClient.invalidateQueries({ queryKey: ['events'] })
   //   },
   // })
 
@@ -154,17 +154,17 @@ function RouteComponent() {
     function (value: string): Array<EventType> {
       console.log('Buscando')
 
-      if (!candidatesQuery.data || candidatesQuery.data.length === 0) {
+      if (!eventsQuery.data || eventsQuery.data.length === 0) {
         return []
       }
 
       if (value.length === 0) {
-        return candidatesQuery.data
+        return eventsQuery.data
       }
 
-      return candidatesQuery.data.filter((c) => c.nombre.includes(value))
+      return eventsQuery.data.filter((c) => c.nombre.includes(value))
     },
-    [candidatesQuery.data],
+    [eventsQuery.data],
   )
 
   // const handleDelete = useCallback(
@@ -188,9 +188,9 @@ function RouteComponent() {
   // Agrupar eventos por mes
   const groupedEvents = useMemo(() => {
     const eventsToGroup =
-      searchResults.length > 0 ? searchResults : candidatesQuery.data || []
+      searchResults.length > 0 ? searchResults : eventsQuery.data || []
     return groupEventsByMonth(eventsToGroup)
-  }, [searchResults, candidatesQuery.data])
+  }, [searchResults, eventsQuery.data])
 
   // Calcular totales
   const totalEvents = useMemo(() => {
@@ -202,21 +202,21 @@ function RouteComponent() {
 
   const totalMonths = groupedEvents.length
 
-  if (candidatesQuery.isPending) {
+  if (eventsQuery.isPending) {
     return <div className="p-4">Loading...</div>
   }
 
-  if (candidatesQuery.error) {
+  if (eventsQuery.error) {
     return (
       <div className="p-4 text-red-500">
-        Error: {candidatesQuery.error.message}
+        Error: {eventsQuery.error.message}
       </div>
     )
   }
 
   return (
     <main className="bg-gray-100 dark:bg-gray-900 min-h-screen px-4 py-6 gap-4 flex flex-col transition-colors">
-      <EventsForm />
+      <EventsInitialBalance />
 
       <Link to="/events/form/$id" params={{ id: 'new' }}>
         <Button

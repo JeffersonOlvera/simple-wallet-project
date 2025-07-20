@@ -19,8 +19,7 @@ const defaultValues: CreateEventType = {
   nombre: '',
   descripccion: '',
   cantidad: 0,
-  //prueba
-  fecha: new Date().toISOString().split('T')[0] as unknown as Date,
+  fecha: new Date().toISOString().split('T')[0],
   tipo: 'ingreso',
 }
 
@@ -56,7 +55,7 @@ function RouteComponent() {
       return true
     },
     onSuccess: async () => {
-      // noti
+      // Notificaciones
       if (mode === 'create') {
         notifications.success({
           title: 'Success',
@@ -71,12 +70,14 @@ function RouteComponent() {
       }
 
       await queryClient.invalidateQueries({
-        queryKey: ['events'],
+        queryKey: ['events'], 
       })
 
-      await queryClient.invalidateQueries({
-        queryKey: ['candidates'],
-      })
+      if (mode === 'update') {
+        await queryClient.invalidateQueries({
+          queryKey: ['event', id],
+        })
+      }
 
       navigate({ to: '/events' })
     },
@@ -157,7 +158,7 @@ function RouteComponent() {
   }, [deleteEvent])
 
   return (
-    <div className="min-h-screen bg-gray-100 dark:bg-gray-900 transition-colors py-6 px-4">
+    <div className="bg-gray-200 dark:bg-gray-900 min-h-screen py-6 px-4">
       <div className="max-w-2xl mx-auto">
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg dark:shadow-xl border border-gray-200 dark:border-gray-700 transition-colors">
           {/* Header */}
@@ -293,7 +294,7 @@ function RouteComponent() {
                   ? dataForm.fecha.toString().split('-').reverse().join('/')
                   : new Date().toLocaleDateString('es-ES')
               }
-              cantidad={dataForm.cantidad?.toString() || '0'}
+              cantidad={dataForm.cantidad.toString() || '0'}
               tipo={dataForm.tipo === 'ingreso' ? 'Ingreso' : 'Egreso'}
             />
           </div>

@@ -1,4 +1,5 @@
 import { MantineProvider, createTheme } from '@mantine/core'
+import { useEffect, useState } from 'react'
 
 type ProviderProps = {
   children?: React.ReactNode
@@ -9,5 +10,19 @@ const theme = createTheme({
 })
 
 export function Provider({ children }: ProviderProps) {
-  return <MantineProvider theme={theme}>{children}</MantineProvider>
+  const [colorScheme, setColorScheme] = useState<'light' | 'dark'>('light')
+
+  useEffect(() => {
+    const isDark = document.documentElement.classList.contains('dark')
+    setColorScheme(isDark ? 'dark' : 'light')
+  }, [])
+
+  return (
+    <MantineProvider
+      theme={theme}
+      defaultColorScheme={colorScheme}
+    >
+      {children}
+    </MantineProvider>
+  )
 }

@@ -1,7 +1,7 @@
-import { Card } from '@/components/Card'
-import { EventsCardBody, EventsCardTitle } from '@/components/events/card'
 import { useMemo } from 'react'
 import { useNavigate } from '@tanstack/react-router' // Añadir import
+import { Card } from '@/components/Card'
+import { EventsCardBody, EventsCardTitle } from '@/components/events/card'
 
 interface EventsCardProps {
   mes: string

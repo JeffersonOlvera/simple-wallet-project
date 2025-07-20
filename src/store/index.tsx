@@ -1,62 +1,70 @@
 import { create } from 'zustand'
 import type { StoreType } from '../types/store'
 
-// Función para obtener el tema inicial
-const getInitialTheme = (): 'light' | 'dark' => {
-  // Verificar si estamos en el browser
-  if (typeof window === 'undefined') return 'light'
-
-  // Verificar localStorage primero
-  const savedTheme = localStorage.getItem('theme')
-  if (savedTheme === 'dark' || savedTheme === 'light') {
-    return savedTheme
-  }
-
-  // Verificar preferencia del sistema
-  if (
-    window.matchMedia &&
-    window.matchMedia('(prefers-color-scheme: dark)').matches
-  ) {
-    return 'dark'
-  }
-
-  return 'light'
-}
-
-// Función para aplicar el tema
+// Función simple para aplicar tema en Tailwind 4
 const applyTheme = (theme: 'light' | 'dark') => {
-  if (typeof window === 'undefined') return
-
-  const root = document.documentElement
-
+  console.log(`🎨 Aplicando tema: ${theme}`)
+  
+  const html = document.documentElement
+  
   if (theme === 'dark') {
-    root.classList.add('dark')
-    root.setAttribute('data-theme', 'dark')
+    html.classList.add('dark')
+    console.log('✅ Clase dark añadida')
   } else {
-    root.classList.remove('dark')
-    root.setAttribute('data-theme', 'light')
+    html.classList.remove('dark')
+    console.log('✅ Clase dark removida')
   }
-
+  
+  // Guardar en localStorage
   localStorage.setItem('theme', theme)
+  
+  // Forzar actualización del color-scheme
+  html.style.colorScheme = theme
+  
+  console.log(`📋 Classes finales: ${html.className}`)
+  console.log(`💾 localStorage: ${localStorage.getItem('theme')}`)
 }
 
-const useAppStore = create<StoreType>((set) => {
-  // Inicializar tema
-  const initialTheme = getInitialTheme()
-  applyTheme(initialTheme)
+// Obtener tema inicial
+const getInitialTheme = (): 'light' | 'dark' => {
+  if (typeof window === 'undefined') return 'light'
+  
+  const saved = localStorage.getItem('theme')
+  if (saved === 'dark' || saved === 'light') {
+    console.log(`📖 Tema desde localStorage: ${saved}`)
+    return saved
+  }
+  
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+  const systemTheme = prefersDark ? 'dark' : 'light'
+  console.log(`🖥️ Tema del sistema: ${systemTheme}`)
+  return systemTheme
+}
 
+const useAppStore = create<StoreType>((set, get) => {
+  const initialTheme = getInitialTheme()
+  
+  // Aplicar tema inicial inmediatamente
+  if (typeof window !== 'undefined') {
+    applyTheme(initialTheme)
+  }
+  
   return {
     role: 'user',
     theme: initialTheme,
-    setTheme: (theme) =>
-      set((state) => {
-        applyTheme(theme)
-        return {
-          ...state,
-          theme,
-        }
-      }),
+    setTheme: (newTheme: 'light' | 'dark') => {
+      console.log(`🔄 setTheme llamado: ${get().theme} → ${newTheme}`)
+      
+      // Actualizar estado
+      set({ theme: newTheme })
+      
+      // Aplicar al DOM
+      applyTheme(newTheme)
+      
+      console.log(`✅ Tema cambiado a: ${newTheme}`)
+    },
   }
 })
 
 export default useAppStore
+

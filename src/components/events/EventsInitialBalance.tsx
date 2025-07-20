@@ -1,11 +1,11 @@
-import { Button, Input } from '@/components'
 import { Label } from '../form/Label'
+import { Button, Input } from '@/components'
 
 const clicked = () => {
   console.log('Button clicked')
 }
 
-export const EventsForm = () => {
+export const EventsInitialBalance = () => {
   return (
     <div className="px-6 w-full py-6 flex flex-col gap-4 bg-white dark:bg-gray-800 rounded-lg border border-gray-300 dark:border-gray-600 transition-colors shadow-sm dark:shadow-lg">
       <Label label="Dinero inicial" />
