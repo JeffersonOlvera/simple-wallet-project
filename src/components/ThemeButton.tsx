@@ -1,14 +1,27 @@
 import { Moon, Sun } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import useAppStore from '@/store/index'
+import React from 'react'
 
 export const ThemeButton = () => {
   const { setTheme, theme } = useAppStore()
 
+  // Forzar re-render cuando cambie el tema
+  React.useEffect(() => {
+    // Aplicar el tema inmediatamente al DOM
+    const root = document.documentElement
+    if (theme === 'dark') {
+      root.classList.add('dark')
+      root.setAttribute('data-theme', 'dark')
+    } else {
+      root.classList.remove('dark')
+      root.setAttribute('data-theme', 'light')
+    }
+  }, [theme])
+
   const handleThemeToggle = () => {
     const newTheme = theme === 'light' ? 'dark' : 'light'
     setTheme(newTheme)
-    console.log(`Theme changed to: ${newTheme}`)
   }
 
   return (
