@@ -3,10 +3,15 @@ import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
 
 import { Notifications } from '@mantine/notifications'
 import TanstackQueryLayout from '../integrations/tanstack-query/layout'
+import { Notifications } from '@mantine/notifications'
 
 import { Header } from '@/components'
 import useAuthStore from '@/store/auth.store'
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute'
+<<<<<<< HEAD
+=======
+import { useLocation } from '@tanstack/react-router'
+>>>>>>> e78b135853b8e78486e8d9af491a8c092221f566
 
 export const Route = createRootRoute({
   component: RootComponent,

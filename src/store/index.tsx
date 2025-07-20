@@ -1,4 +1,5 @@
 import { create } from 'zustand'
+import { persist } from 'zustand/middleware'
 import type { StoreType } from '../types/store'
 
 // Función simple para aplicar tema en Tailwind 4
@@ -25,6 +26,7 @@ const applyTheme = (theme: 'light' | 'dark') => {
   console.log(`💾 localStorage: ${localStorage.getItem('theme')}`)
 }
 
+<<<<<<< HEAD
 // Obtener tema inicial
 const getInitialTheme = (): 'light' | 'dark' => {
   if (typeof window === 'undefined') return 'light'
@@ -65,6 +67,37 @@ const useAppStore = create<StoreType>((set, get) => {
     },
   }
 })
+=======
+const useAppStore = create<StoreType>()(
+  persist(
+    (set) => {
+      // Inicializar tema
+      const initialTheme = getInitialTheme()
+      applyTheme(initialTheme)
+
+      return {
+        role: 'user',
+        theme: initialTheme,
+        setTheme: (theme) =>
+          set((state) => {
+            applyTheme(theme)
+            return {
+              ...state,
+              theme,
+            }
+          }),
+      }
+    },
+    {
+      name: 'app-storage',
+      partialize: (state) => ({
+        theme: state.theme,
+        role: state.role
+      })
+    }
+  )
+)
+>>>>>>> e78b135853b8e78486e8d9af491a8c092221f566
 
 export default useAppStore
 
