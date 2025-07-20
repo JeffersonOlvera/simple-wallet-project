@@ -5,7 +5,7 @@ import { Notifications } from '@mantine/notifications'
 import TanstackQueryLayout from '../integrations/tanstack-query/layout'
 
 import { Header } from '@/components'
-import useAuthStore from '@/store/auth.store'
+// import useAuthStore from '@/store/auth.store'
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute'
 
 export const Route = createRootRoute({
@@ -13,7 +13,7 @@ export const Route = createRootRoute({
 })
 
 function RootComponent() {
-  const { isAuthenticated } = useAuthStore()
+  // const { isAuthenticated } = useAuthStore()
   const location = useLocation()
   
   const isAuthRoute = location.pathname.startsWith('/auth')

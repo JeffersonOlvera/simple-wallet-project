@@ -1,15 +1,15 @@
 import { Link, createFileRoute } from '@tanstack/react-router'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import {  useQuery,  } from '@tanstack/react-query'
+import {  useMemo, useState } from 'react'
 import type { EventType } from '@/types/event.type'
 import { getEvents } from '@/api/events'
 import { Button, EventsCard, EventsContainer, EventsInitialBalance } from '@/components'
 import DataRepo from '@/api/datasource'
-import SearchInput from '@/components/SearchInput'
-import { Pagination } from '@/components/pagination'
-import { notifications } from '@/lib/notification'
+// import SearchInput from '@/components/SearchInput'
+// import { Pagination } from '@/components/pagination'
+// import { notifications } from '@/lib/notification'
 import { useDebounce } from '@/hooks/debounce'
-import { usePagination } from '@/api/hooks/pagination'
+// import { usePagination } from '@/api/hooks/pagination'
 
 type SearchParams = {
   tipo?: string
@@ -31,20 +31,34 @@ const monthNames = [
   'Diciembre',
 ]
 
-const groupEventsByMonth = (events: EventType[]) => {
+const groupEventsByMonth = (events: Array<EventType>) => {
   const grouped = events.reduce(
-    (acc, event) => {
+    (acc: Record<
+      string,
+      {
+        mes: string
+        anio: string
+        eventos: Array<{
+          id: string
+          titulo: string
+          descripcion: string
+          fecha?: string
+          cantidad?: string
+          tipo?: 'Egreso' | 'Ingreso'
+        }>
+      }
+    >, event) => {
       const date = new Date(event.fecha)
       const monthYear = `${date.getFullYear()}-${date.getMonth()}`
-
-      if (!acc[monthYear]) {
+  
+      if (!(monthYear in acc)) {
         acc[monthYear] = {
           mes: monthNames[date.getMonth()],
           anio: date.getFullYear().toString(),
           eventos: [],
         }
       }
-
+  
       acc[monthYear].eventos.push({
         id: event.id,
         titulo: event.nombre,
@@ -60,24 +74,10 @@ const groupEventsByMonth = (events: EventType[]) => {
             ? 'Ingreso'
             : ('Egreso' as 'Ingreso' | 'Egreso'),
       })
-
+  
       return acc
     },
-    {} as Record<
-      string,
-      {
-        mes: string
-        anio: string
-        eventos: Array<{
-          id: string
-          titulo: string
-          descripcion: string
-          fecha?: string
-          cantidad?: string
-          tipo?: 'Egreso' | 'Ingreso'
-        }>
-      }
-    >,
+    {},
   )
 
   // Ordenar por fecha (más reciente primero)
@@ -112,8 +112,8 @@ export const Route = createFileRoute('/events/')({
 })
 
 function RouteComponent() {
-  const { tipo } = Route.useSearch()
-  const queryClient = useQueryClient()
+  // const { tipo } = Route.useSearch()
+  // const queryClient = useQueryClient()
 
   // const [selectedevents, setSelectedevents] = useState<string[]>([])
 
@@ -150,22 +150,22 @@ function RouteComponent() {
     1000,
   )
 
-  const filterEvents = useCallback(
-    function (value: string): Array<EventType> {
-      console.log('Buscando')
+  // const filterEvents = useCallback(
+  //   function (value: string): Array<EventType> {
+  //     console.log('Buscando')
 
-      if (!eventsQuery.data || eventsQuery.data.length === 0) {
-        return []
-      }
+  //     if (!eventsQuery.data || eventsQuery.data.length === 0) {
+  //       return []
+  //     }
 
-      if (value.length === 0) {
-        return eventsQuery.data
-      }
+  //     if (value.length === 0) {
+  //       return eventsQuery.data
+  //     }
 
-      return eventsQuery.data.filter((c) => c.nombre.includes(value))
-    },
-    [eventsQuery.data],
-  )
+  //     return eventsQuery.data.filter((c) => c.nombre.includes(value))
+  //   },
+  //   [eventsQuery.data],
+  // )
 
   // const handleDelete = useCallback(
   //   (candidateId: string) => {

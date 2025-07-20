@@ -1,7 +1,8 @@
 import React from 'react'
 import { useNavigate } from '@tanstack/react-router'
+import type {RegisterType} from '@/types/auth.type';
 import { useAppForm } from '@/hooks/form'
-import { RegisterSchema, type RegisterType } from '@/types/auth.type'
+import { RegisterSchema  } from '@/types/auth.type'
 import useAuthStore from '@/store/auth.store'
 import { notifications } from '@/lib/notification'
 
@@ -25,8 +26,11 @@ export const RegisterForm = () => {
           message: 'Tu cuenta ha sido creada exitosamente',
         })
         navigate({ to: '/events' })
-      } catch (error) {
-        // El error ya se maneja en el store
+      } catch (err) {
+        notifications.error({
+          title: 'Error al crear cuenta',
+          message: err instanceof Error ? err.message : 'Por favor, verifica tus datos',
+        })
       }
     },
     validators: {

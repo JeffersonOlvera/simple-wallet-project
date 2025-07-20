@@ -1,7 +1,8 @@
 import React from 'react'
 import { useNavigate } from '@tanstack/react-router'
+import type {LoginType} from '@/types/auth.type';
 import { useAppForm } from '@/hooks/form'
-import { LoginSchema, type LoginType } from '@/types/auth.type'
+import { LoginSchema  } from '@/types/auth.type'
 import useAuthStore from '@/store/auth.store'
 import { notifications } from '@/lib/notification'
 
@@ -23,8 +24,11 @@ export const LoginForm = () => {
           message: 'Has iniciado sesión correctamente',
         })
         navigate({ to: '/events' })
-      } catch (error) {
-        // El error ya se maneja en el store
+      } catch (err) {
+        notifications.error({
+          title: 'Error al iniciar sesión',
+          message: err instanceof Error ? err.message : 'Por favor, verifica tus credenciales on informa al administrador',
+        })
       }
     },
     validators: {

@@ -1,5 +1,5 @@
-import { cn } from '@/lib/utils'
 import React from 'react'
+import { cn } from '@/lib/utils'
 
 type ButtonVariant = 'solid' | 'outline' | 'ghost'
 type ButtonColor = 'purple' | 'blue' | 'red' | 'gray'
@@ -55,7 +55,7 @@ export const Button = ({
 }: ButtonProps) => {
   const baseClasses =
     'py-2 px-4 rounded text-sm font-medium transition-all duration-150 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed'
-  const variantClasses = colorMap[color]?.[variant] ?? colorMap.purple.solid
+  const variantClasses = colorMap[color][variant]
 
   return (
     <button className={cn(baseClasses, variantClasses, className)} {...props}>

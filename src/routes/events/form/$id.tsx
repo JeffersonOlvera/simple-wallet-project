@@ -19,7 +19,7 @@ const defaultValues: CreateEventType = {
   nombre: '',
   descripccion: '',
   cantidad: 0,
-  fecha: new Date().toISOString().split('T')[0],
+  fecha: new Date().toISOString().split('T')[0] as unknown as Date,
   tipo: 'ingreso',
 }
 
@@ -70,7 +70,7 @@ function RouteComponent() {
       }
 
       await queryClient.invalidateQueries({
-        queryKey: ['events'], 
+        queryKey: ['events'],
       })
 
       if (mode === 'update') {
@@ -140,12 +140,12 @@ function RouteComponent() {
 
   const dataForm = useStore(form.store, (state) => state.values)
 
-  const analyticValueMemo = React.useMemo(() => {
-    return {
-      cantidad: dataForm.cantidad,
-      fecha: dataForm.fecha,
-    }
-  }, [dataForm.cantidad, dataForm.fecha])
+  // const analyticValueMemo = React.useMemo(() => {
+  //   return {
+  //     cantidad: dataForm.cantidad,
+  //     fecha: dataForm.fecha,
+  //   }
+  // }, [dataForm.cantidad, dataForm.fecha])
 
   const handleDelete = React.useCallback(() => {
     const isConfirmed = window.confirm(
@@ -282,23 +282,18 @@ function RouteComponent() {
         </div>
 
         {/* Vista previa del evento */}
-        {(dataForm.cantidad > 0 || dataForm.fecha || dataForm.nombre) && (
-          <div className="mt-6 bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700 p-4 transition-colors">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-3">
-              Vista previa
-            </h3>
-            <EventsCardBody
-              titulo={dataForm.nombre || 'Nombre del evento'}
-              fecha={
-                dataForm.fecha
-                  ? dataForm.fecha.toString().split('-').reverse().join('/')
-                  : new Date().toLocaleDateString('es-ES')
-              }
-              cantidad={dataForm.cantidad.toString() || '0'}
-              tipo={dataForm.tipo === 'ingreso' ? 'Ingreso' : 'Egreso'}
-            />
-          </div>
-        )}
+
+        <div className="mt-6 bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700 p-4 transition-colors">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-3">
+            Vista previa
+          </h3>
+          <EventsCardBody
+            titulo={dataForm.nombre || 'Nombre del evento'}
+            fecha={dataForm.fecha.toString().split('-').reverse().join('/')}
+            cantidad={dataForm.cantidad.toString() || '0'}
+            tipo={dataForm.tipo === 'ingreso' ? 'Ingreso' : 'Egreso'}
+          />
+        </div>
       </div>
     </div>
   )

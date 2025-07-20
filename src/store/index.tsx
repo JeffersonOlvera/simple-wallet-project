@@ -1,5 +1,4 @@
 import { create } from 'zustand'
-import { persist } from 'zustand/middleware'
 import type { StoreType } from '../types/store'
 
 // Función simple para aplicar tema en Tailwind 4

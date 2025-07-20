@@ -27,8 +27,11 @@ export const RegisterForm = () => {
           message: 'Tu cuenta ha sido creada exitosamente',
         })
         navigate({ to: '/events' })
-      } catch (error) {
-        // El error ya se maneja en el store
+      } catch (err) {
+        notifications.error({
+          title: 'Error de registro',
+          message: err instanceof Error ? err.message : 'Por favor, verifica tus datos',
+        })
       }
     },
     validators: {

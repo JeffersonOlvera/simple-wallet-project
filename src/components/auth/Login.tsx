@@ -1,6 +1,4 @@
-import React from 'react'
 import { useNavigate } from '@tanstack/react-router'
-
 import type {LoginType} from '@/types/auth.type';
 import { useAppForm } from '@/hooks/form'
 import { LoginSchema   } from '@/types/auth.type'
@@ -9,7 +7,7 @@ import { notifications } from '@/lib/notification'
 
 export const LoginForm = () => {
   const navigate = useNavigate()
-  const { login, isLoading, error, clearError } = useAuthStore()
+  const { login, isLoading, clearError } = useAuthStore()
 
   const form = useAppForm({
     defaultValues: {
@@ -25,11 +23,11 @@ export const LoginForm = () => {
           message: 'Has iniciado sesión correctamente',
         })
         navigate({ to: '/events' })
-      } catch (error) 
+      } catch (err) 
       {
         notifications.error({
           title: 'Error al iniciar sesión',
-          message: error.message || 'Por favor, verifica tus credenciales',
+          message: err instanceof Error ? err.message : 'Por favor, verifica tus credenciales',
         })
       }
     },
