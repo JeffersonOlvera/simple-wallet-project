@@ -109,7 +109,7 @@ export const calculateMonthlyBalances = (
       descripccion: evento.descripcion,
       cantidad: parseFloat(evento.cantidad || '0'),
       fecha: new Date(evento.fecha?.split('/').reverse().join('-') || ''),
-      tipo: evento.tipo === 'Ingreso' ? 'ingreso' : 'egreso',
+      tipo: evento.tipo === 'Ingreso' ? 'ingreso' : 'gasto',
       adjunto: evento.adjunto,
     }))
 

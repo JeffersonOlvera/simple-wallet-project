@@ -112,10 +112,6 @@ export const Route = createFileRoute('/events/')({
 })
 
 function RouteComponent() {
-  // const { tipo } = Route.useSearch()
-  // const queryClient = useQueryClient()
-
-  // const [selectedevents, setSelectedevents] = useState<string[]>([])
 
   const eventsQuery = useQuery({
     queryKey: ['events'],
@@ -125,74 +121,20 @@ function RouteComponent() {
     refetchIntervalInBackground: false,
   })
 
-  // const deleteMutation = useMutation({
-  //   mutationFn: (eventId: string) => DataRepo.deleteEvent(eventId),
-  //   onSettled: (_, error) => {
-  //     if (error) {
-  //       notifications.error({
-  //         title: 'Error',
-  //         message:
-  //           error.message || 'An error occurred while deleting the event',
-  //       })
-  //     } else {
-  //       notifications.success({
-  //         title: 'Success',
-  //         message: 'Candidate deleted successfully!',
-  //       })
-  //     }
-  //     queryClient.invalidateQueries({ queryKey: ['events'] })
-  //   },
-  // })
-
   const [searchResults, _setSearchResults] = useState<Array<EventType>>([])
   const [debouncedSearchValue, _setSearchValue, _searchValue] = useDebounce(
     '',
     1000,
   )
 
-  // const filterEvents = useCallback(
-  //   function (value: string): Array<EventType> {
-  //     console.log('Buscando')
 
-  //     if (!eventsQuery.data || eventsQuery.data.length === 0) {
-  //       return []
-  //     }
-
-  //     if (value.length === 0) {
-  //       return eventsQuery.data
-  //     }
-
-  //     return eventsQuery.data.filter((c) => c.nombre.includes(value))
-  //   },
-  //   [eventsQuery.data],
-  // )
-
-  // const handleDelete = useCallback(
-  //   (candidateId: string) => {
-  //     const isConfirmed = window.confirm(
-  //       '¿Estas seguro que deseas eliminar este candidato? Esta acción no se puede deshacer.',
-  //     )
-
-  //     if (isConfirmed) {
-  //       deleteMutation.mutate(candidateId)
-  //     }
-  //   },
-  //   [deleteMutation],
-  // )
-
-  // useEffect(() => {
-  //   const result = filterEvents(debouncedSearchValue)
-  //   setSearchResults(result)
-  // }, [debouncedSearchValue, filterEvents])
-
-  // Agrupar eventos por mes
   const groupedEvents = useMemo(() => {
     const eventsToGroup =
       searchResults.length > 0 ? searchResults : eventsQuery.data || []
     return groupEventsByMonth(eventsToGroup)
   }, [searchResults, eventsQuery.data])
 
-  // Calcular totales
+
   const totalEvents = useMemo(() => {
     return groupedEvents.reduce(
       (total, month) => total + month.eventos.length,

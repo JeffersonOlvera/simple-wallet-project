@@ -7,6 +7,7 @@ export const EventSchema = z.object({
   cantidad: z.coerce.number().positive(),
   fecha: z.coerce.date(),
   tipo: z.enum(['ingreso', 'gasto']),
+  adjunto: z.string().optional(),
 })
 
 export type EventType = z.infer<typeof EventSchema>

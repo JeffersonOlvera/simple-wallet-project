@@ -22,6 +22,7 @@ const defaultValues: CreateEventType = {
   cantidad: 0,
   fecha: new Date().toISOString().split('T')[0] as unknown as Date,
   tipo: 'ingreso',
+  adjunto: '',
 }
 
 function RouteComponent() {
@@ -249,7 +250,7 @@ function RouteComponent() {
               children={(field) => (
                 <ImageInput
                   label="Adjunto (imagen opcional)"
-                  value={field.state.value}
+                  value={typeof field.state.value === 'string' ? field.state.value : undefined}
                   onChange={field.handleChange}
                   // placeholder="Seleccionar imagen..."
                 />
