@@ -5,11 +5,8 @@ import type { EventType } from '@/types/event.type'
 import { getEvents } from '@/api/events'
 import { Button, EventsCard, EventsContainer, EventsInitialBalance } from '@/components'
 import DataRepo from '@/api/datasource'
-// import SearchInput from '@/components/SearchInput'
-// import { Pagination } from '@/components/pagination'
-// import { notifications } from '@/lib/notification'
 import { useDebounce } from '@/hooks/debounce'
-// import { usePagination } from '@/api/hooks/pagination'
+
 
 type SearchParams = {
   tipo?: string
@@ -185,7 +182,6 @@ function RouteComponent() {
           />
         ))}
 
-        {/* Mensaje cuando no hay eventos */}
         {groupedEvents.length === 0 && (
           <div className="text-center py-12">
             <p className="text-gray-500 dark:text-gray-400 text-lg">

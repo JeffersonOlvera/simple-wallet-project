@@ -73,10 +73,8 @@ const useAppStore = create<BalanceState>((set, get) => {
     setTheme: (newTheme: 'light' | 'dark') => {
       console.log(`🔄 setTheme llamado: ${get().theme} → ${newTheme}`)
       
-      // Actualizar estado
       set({ theme: newTheme })
       
-      // Aplicar al DOM
       applyTheme(newTheme)
       
       console.log(`✅ Tema cambiado a: ${newTheme}`)
@@ -88,7 +86,6 @@ const useAppStore = create<BalanceState>((set, get) => {
     getBalanceForMonth: (events, _monthIndex) => {
       const state = get()
       
-      // Calcular totales del mes actual
       const totalIngresos = events
         .filter(event => event.tipo === 'ingreso')
         .reduce((sum, event) => sum + parseFloat(event.cantidad || '0'), 0)
@@ -99,8 +96,7 @@ const useAppStore = create<BalanceState>((set, get) => {
       
       const balanceMensual = totalIngresos - totalEgresos
       
-      // Para el balance global, necesitamos el balance inicial + todos los balances mensuales anteriores
-      // Este cálculo se debe hacer en el componente que tenga acceso a todos los meses ordenados
+      console.log(`🌍 Balance global: ${state.initialBalance} + ${balanceMensual}`)
       const balanceGlobal = state.initialBalance + balanceMensual
       
       return {

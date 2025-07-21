@@ -1,5 +1,5 @@
-import { useMemo } from 'react'
-import { useNavigate } from '@tanstack/react-router' // Añadir import
+import { useEffect, useMemo, useState } from 'react'
+import { useNavigate } from '@tanstack/react-router'
 import { Card } from '@/components/Card'
 import { EventsCardBody, EventsCardTitle } from '@/components/events/card'
 
@@ -17,9 +17,16 @@ interface EventsCardProps {
 }
 
 export const EventsCard = ({ mes, anio, eventos }: EventsCardProps) => {
-  const navigate = useNavigate() // Añadir hook
+  const navigate = useNavigate()
+  const [balanceInicial, setBalanceInicial] = useState(0)
 
-  // Calcular totales del mes
+  useEffect(() => {
+    const balanceGuardado = localStorage.getItem('initialBalance')
+    if (balanceGuardado) {
+      setBalanceInicial(parseFloat(balanceGuardado))
+    }
+  }, [balanceInicial])
+
   const totales = useMemo(() => {
     const ingresos = eventos
       .filter((evento) => evento.tipo === 'Ingreso')
@@ -30,13 +37,15 @@ export const EventsCard = ({ mes, anio, eventos }: EventsCardProps) => {
       .reduce((sum, evento) => sum + parseFloat(evento.cantidad || '0'), 0)
 
     const mensual = ingresos - gastos
+    const global = balanceInicial + mensual
 
     return {
       ingresos,
       gastos,
       mensual,
+      global,
     }
-  }, [eventos])
+  }, [eventos, balanceInicial])
 
   const formatCurrency = (amount: number) => {
     return `$${amount.toLocaleString('es-ES')}`
@@ -114,8 +123,14 @@ export const EventsCard = ({ mes, anio, eventos }: EventsCardProps) => {
           <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
             Global:
           </span>
-          <span className="text-sm font-bold text-blue-600 dark:text-blue-400">
-            {formatCurrency(totales.mensual)}
+          <span 
+            className={`text-sm font-bold ${
+              totales.global >= 0
+                ? 'text-blue-600 dark:text-blue-400'
+                : 'text-red-500 dark:text-red-400'
+            }`}
+          >
+            {formatCurrency(totales.global)}
           </span>
         </div>
       </div>
