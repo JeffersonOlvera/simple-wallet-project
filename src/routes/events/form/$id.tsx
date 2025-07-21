@@ -134,6 +134,7 @@ function RouteComponent() {
           cantidad: data.cantidad,
           fecha: data.fecha,
           tipo: data.tipo,
+          adjunto: data.adjunto || '',
         },
         { keepDefaultValues: true },
       )
