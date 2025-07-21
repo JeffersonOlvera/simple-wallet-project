@@ -1,7 +1,5 @@
 import { create } from 'zustand'
-import type { StoreType } from '../types/store'
 
-// Función simple para aplicar tema en Tailwind 4
 const applyTheme = (theme: 'light' | 'dark') => {
   console.log(`🎨 Aplicando tema: ${theme}`)
   
@@ -15,17 +13,13 @@ const applyTheme = (theme: 'light' | 'dark') => {
     console.log('✅ Clase dark removida')
   }
   
-  // Guardar en localStorage
   localStorage.setItem('theme', theme)
-  
-  // Forzar actualización del color-scheme
   html.style.colorScheme = theme
-  
+
   console.log(`📋 Classes finales: ${html.className}`)
   console.log(`💾 localStorage: ${localStorage.getItem('theme')}`)
 }
 
-// Obtener tema inicial
 const getInitialTheme = (): 'light' | 'dark' => {
   if (typeof window === 'undefined') return 'light'
   
@@ -41,10 +35,33 @@ const getInitialTheme = (): 'light' | 'dark' => {
   return systemTheme
 }
 
-const useAppStore = create<StoreType>((set, get) => {
-  const initialTheme = getInitialTheme()
+const getInitialBalance = (): number => {
+  if (typeof window === 'undefined') return 0
   
-  // Aplicar tema inicial inmediatamente
+  const saved = localStorage.getItem('initialBalance')
+  const balance = saved ? parseFloat(saved) : 0
+  return isNaN(balance) ? 0 : balance
+}
+
+interface BalanceState {
+  role: 'user'
+  theme: 'light' | 'dark'
+  initialBalance: number
+  setTheme: (theme: 'light' | 'dark') => void
+  setInitialBalance: (balance: number) => void
+  getBalanceForMonth: (events: Array<any>, monthIndex: number) => {
+    totalIngresos: number
+    totalEgresos: number
+    balanceMensual: number
+    balanceGlobal: number
+  }
+}
+
+const useAppStore = create<BalanceState>((set, get) => {
+  const initialTheme = getInitialTheme()
+  const initialBalance = getInitialBalance()
+  
+
   if (typeof window !== 'undefined') {
     applyTheme(initialTheme)
   }
@@ -52,6 +69,7 @@ const useAppStore = create<StoreType>((set, get) => {
   return {
     role: 'user',
     theme: initialTheme,
+    initialBalance,
     setTheme: (newTheme: 'light' | 'dark') => {
       console.log(`🔄 setTheme llamado: ${get().theme} → ${newTheme}`)
       
@@ -63,8 +81,36 @@ const useAppStore = create<StoreType>((set, get) => {
       
       console.log(`✅ Tema cambiado a: ${newTheme}`)
     },
+    setInitialBalance: (balance: number) => {
+      set({ initialBalance: balance })
+      localStorage.setItem('initialBalance', balance.toString())
+    },
+    getBalanceForMonth: (events, _monthIndex) => {
+      const state = get()
+      
+      // Calcular totales del mes actual
+      const totalIngresos = events
+        .filter(event => event.tipo === 'ingreso')
+        .reduce((sum, event) => sum + parseFloat(event.cantidad || '0'), 0)
+      
+      const totalEgresos = events
+        .filter(event => event.tipo === 'egreso') 
+        .reduce((sum, event) => sum + parseFloat(event.cantidad || '0'), 0)
+      
+      const balanceMensual = totalIngresos - totalEgresos
+      
+      // Para el balance global, necesitamos el balance inicial + todos los balances mensuales anteriores
+      // Este cálculo se debe hacer en el componente que tenga acceso a todos los meses ordenados
+      const balanceGlobal = state.initialBalance + balanceMensual
+      
+      return {
+        totalIngresos,
+        totalEgresos,
+        balanceMensual,
+        balanceGlobal
+      }
+    }
   }
 })
 
 export default useAppStore
-

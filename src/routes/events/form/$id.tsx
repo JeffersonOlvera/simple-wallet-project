@@ -10,6 +10,7 @@ import DataRepo from '@/api/datasource'
 import { useAppForm } from '@/hooks/form'
 import { notifications } from '@/lib/notification'
 import { EventsCardBody } from '@/components/events'
+import { ImageInput } from '@/components/form/ImageInput'
 
 export const Route = createFileRoute('/events/form/$id')({
   component: RouteComponent,
@@ -238,6 +239,19 @@ function RouteComponent() {
                     { value: 'gasto', label: 'Gasto' },
                   ]}
                   className="w-full"
+                />
+              )}
+            />
+
+            {/* Campo de imagen */}
+            <form.AppField
+              name="adjunto"
+              children={(field) => (
+                <ImageInput
+                  label="Adjunto (imagen opcional)"
+                  value={field.state.value}
+                  onChange={field.handleChange}
+                  // placeholder="Seleccionar imagen..."
                 />
               )}
             />
