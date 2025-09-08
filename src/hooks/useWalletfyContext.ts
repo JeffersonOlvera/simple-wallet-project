@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { getEvents } from '@/api/events'
+import LocalStorageDS from '@/api/impl/ds/LocalStorageDS'
 import useAppStore from '@/store/index'
 import useAuthStore from "@/store/auth.store"
 import type { WalletfyContextData } from '@/types/chat.type'
@@ -8,24 +8,29 @@ import type { WalletfyContextData } from '@/types/chat.type'
 export const useWalletfyContext = (): WalletfyContextData => {
   const { user } = useAuthStore()
   const { initialBalance, getBalanceForMonth } = useAppStore()
-  
-  const { data: events = [] } = useQuery({
+  const localStorageDS = new LocalStorageDS()
+
+  const {
+    data,
+    isLoading,
+    error,
+  } = useQuery({
     queryKey: ['events'],
-    queryFn: getEvents,
+    queryFn: () => localStorageDS.getEvents(),
   })
 
+  const events = Array.isArray(data) ? data : []
+
   return useMemo(() => {
-    // Calculate current balance
     const balance = getBalanceForMonth(events, 0)
-    
-    // Calculate statistics
+
     const ingresos = events.filter(e => e.tipo === 'ingreso')
-    const egresos = events.filter(e => e.tipo === 'egreso')
-    
+    const egresos = events.filter(e => e.tipo === 'gasto')
+
     const mayorIngreso = ingresos.length > 0 
       ? Math.max(...ingresos.map(e => e.cantidad)) 
       : 0
-    
+
     const mayorEgreso = egresos.length > 0 
       ? Math.max(...egresos.map(e => e.cantidad)) 
       : 0
@@ -33,10 +38,10 @@ export const useWalletfyContext = (): WalletfyContextData => {
     const eventosFormateados = events.map(event => ({
       id: event.id,
       nombre: event.nombre,
-      descripcion: event.descripccion,
+      descripcion: event.descripccion, // estandariza si puedes
       cantidad: event.cantidad,
       fecha: new Date(event.fecha).toLocaleDateString('es-ES'),
-      tipo: event.tipo
+      tipo: event.tipo,
     }))
 
     return {
@@ -54,7 +59,11 @@ export const useWalletfyContext = (): WalletfyContextData => {
         promedioMensual: balance.balanceMensual,
         mayorIngreso,
         mayorEgreso,
-      }
+      },
+      estado: {
+        cargando: isLoading,
+        error: error ? String(error) : null,
+      },
     }
-  }, [user, events, initialBalance, getBalanceForMonth])
+  }, [user, events, initialBalance, getBalanceForMonth, isLoading, error])
 }

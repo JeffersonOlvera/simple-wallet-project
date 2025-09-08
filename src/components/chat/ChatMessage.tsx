@@ -1,6 +1,4 @@
 import React from 'react'
-// import { format } from 'date-fns'
-// import { es } from 'date-fns/locale'
 import { User, Bot } from 'lucide-react'
 import type { ChatMessage } from '@/types/chat.type'
 

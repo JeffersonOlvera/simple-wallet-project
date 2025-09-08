@@ -101,7 +101,6 @@ export const ChatControls: React.FC<ChatControlsProps> = ({
       {showControls && (
         <div className="absolute top-full right-0 mt-2 w-80 max-w-[90vw] z-50">
           <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-600 shadow-lg">
-            {/* Header */}
             <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-600">
               <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100">
                 Configuración del Modelo
@@ -115,7 +114,6 @@ export const ChatControls: React.FC<ChatControlsProps> = ({
             </div>
 
             <div className="p-4 space-y-4">
-              {/* Quick Presets */}
               <div>
                 <div className="flex items-center gap-1 mb-2">
                   <span className="text-xs font-medium text-gray-700 dark:text-gray-300">

@@ -29,7 +29,7 @@ export interface WalletfyContextData {
     descripcion?: string
     cantidad: number
     fecha: string
-    tipo: 'ingreso' | 'egreso'
+    tipo: 'ingreso' | 'gasto'
   }>
   estadisticas: {
     totalEventos: number
