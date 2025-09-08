@@ -1,6 +1,5 @@
-// src/components/layout/Header.tsx
 import { Link } from '@tanstack/react-router'
-import { LogOut, User, MessageCircle } from 'lucide-react'
+import { LogOut, User } from 'lucide-react'
 import { Button, ThemeButton } from '@/components'
 import useAuthStore from '@/store/auth.store'
 import { notifications } from '@/lib/notification'
@@ -28,30 +27,14 @@ export const Header = () => {
             <span className="text-purple-500 dark:text-purple-400">fy</span>2
           </Link>
         </div>
+        {user && (
+          <div className="hidden md:flex items-center gap-4">
+            <Link to="/events">Eventos</Link>
+            <Link to="/chat">Asistente IA</Link>
+          </div>
+        )}
 
-        {/* Navigation Links - Added Chat Link */}
-        <div className="hidden md:flex items-center gap-4">
-          <Link
-            to="/events"
-            className="flex items-center gap-2 px-3 py-2 text-gray-700 dark:text-gray-300 
-                       hover:text-purple-600 dark:hover:text-purple-400 transition-colors rounded-lg
-                       hover:bg-purple-50 dark:hover:bg-purple-900/20"
-          >
-            <span>Eventos</span>
-          </Link>
-
-          <Link
-            to="/chat"
-            className="flex items-center gap-2 px-3 py-2 text-gray-700 dark:text-gray-300 
-                       hover:text-purple-600 dark:hover:text-purple-400 transition-colors rounded-lg
-                       hover:bg-purple-50 dark:hover:bg-purple-900/20"
-          >
-            <MessageCircle size={18} />
-            <span>Asistente IA</span>
-          </Link>
-        </div>
-
-        <div className="flex gap-2 items-center">
+        <div className="flex gap-2">
           {user && (
             <div className="hidden sm:flex items-center gap-3 mr-4">
               <div className="flex items-center gap-2 text-gray-700 dark:text-gray-300">
@@ -68,7 +51,6 @@ export const Header = () => {
               </button>
             </div>
           )}
-
           <Link to="/events/form/$id" params={{ id: 'new' }}>
             <Button
               label="Crear evento"
@@ -77,18 +59,6 @@ export const Header = () => {
               className="hidden sm:inline-flex"
             />
           </Link>
-
-          {/* Mobile Chat Link */}
-          <Link
-            to="/chat"
-            className="md:hidden flex items-center justify-center w-10 h-10 rounded-full 
-                       bg-purple-100 dark:bg-purple-900 hover:bg-purple-200 dark:hover:bg-purple-800 
-                       text-purple-600 dark:text-purple-400 transition-colors"
-            title="Asistente IA"
-          >
-            <MessageCircle size={20} />
-          </Link>
-
           <ThemeButton />
 
           {/* Mobile user menu */}

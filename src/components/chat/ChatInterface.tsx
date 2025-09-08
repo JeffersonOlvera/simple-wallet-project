@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import useChatStore from '@/store/chat.store'
 import { useWalletfyContext } from '@/hooks/useWalletfyContext'
 import { ChatMessageComponent } from './ChatMessage'
@@ -23,6 +23,7 @@ export const ChatInterface: React.FC = () => {
 
   const walletfyContext = useWalletfyContext()
   const messagesEndRef = useRef<HTMLDivElement>(null)
+  const [showStatus, setShowStatus] = useState(true)
 
   useEffect(() => {
     if (!engine && modelStatus === 'idle') {
@@ -34,6 +35,10 @@ export const ChatInterface: React.FC = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages])
 
+  useEffect(() => {
+    setShowStatus(true)
+  }, [modelStatus, errorMessage])
+
   const handleSendMessage = async (content: string) => {
     try {
       await sendMessage(content, walletfyContext)
@@ -42,35 +47,43 @@ export const ChatInterface: React.FC = () => {
     }
   }
 
+  const handleDismissStatus = () => {
+    setShowStatus(false)
+  }
+
   const isDisabled = modelStatus !== 'ready'
 
   return (
     <div className="flex flex-col h-full bg-white dark:bg-gray-900 transition-colors">
       <div className="p-4 border-b border-gray-200 dark:border-gray-700">
-        <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center justify-between">
           <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100">
-            Asistente Financiero Walletfy
+            Asistente Financiero
           </h1>
+
+          <ChatControls
+            config={config}
+            onConfigChange={updateConfig}
+            onClearChat={clearChat}
+            disabled={isDisabled}
+          />
         </div>
 
-        <ModelStatusComponent
-          status={modelStatus}
-          progress={loadingProgress}
-          errorMessage={errorMessage}
-        />
+        {showStatus && (
+          <ModelStatusComponent
+            status={modelStatus}
+            progress={loadingProgress}
+            errorMessage={errorMessage}
+            onDismiss={handleDismissStatus}
+          />
+        )}
       </div>
 
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
         {messages.length === 0 && modelStatus === 'ready' && (
           <div className="text-center text-gray-500 dark:text-gray-400 py-8">
             <p className="text-lg mb-2">¡Hola! 🤖👋</p>
-            <p>Soy tu asistente financiero personal. Puedo ayudarte a:</p>
-            <ul className="list-disc list-inside mt-2 text-sm">
-              <li>Analizar tus ingresos y gastos</li>
-              <li>Calcular tendencias financieras</li>
-              <li>Darte recomendaciones personalizadas</li>
-              <li>Explicar tu balance actual</li>
-            </ul>
+            <p>Soy tu asistente financiero personal.</p>
             <p className="mt-4 text-sm">¿En qué puedo ayudarte hoy?</p>
           </div>
         )}
@@ -98,17 +111,6 @@ export const ChatInterface: React.FC = () => {
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Controls */}
-      <div className="p-4 border-t border-gray-200 dark:border-gray-700">
-        <ChatControls
-          config={config}
-          onConfigChange={updateConfig}
-          onClearChat={clearChat}
-          disabled={isDisabled}
-        />
-      </div>
-
-      {/* Input */}
       <div className="p-4 border-t border-gray-200 dark:border-gray-700">
         <ChatInput
           onSendMessage={handleSendMessage}

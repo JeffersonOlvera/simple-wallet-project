@@ -23,8 +23,6 @@ interface ChatState {
   setLoadingProgress: (progress: number) => void
 }
 
-//todo: mejorar el prompt
-
 const SYSTEM_PROMPT = `Eres un asistente financiero inteligente integrado en Walletfy, una aplicación de gestión de finanzas personales. Tu rol es ayudar a los usuarios a entender y analizar sus datos financieros.
 
 CONTEXTO: Recibirás datos de la aplicación en formato JSON que incluyen el balance actual, eventos de ingresos/egresos, y estadísticas.
@@ -72,7 +70,7 @@ const useChatStore = create<ChatState>()(
             const percentage = Math.round(progress.progress * 100)
             set({ loadingProgress: percentage })
           })
-          //todo: cambiar el modelo en base al .env o una constante
+          
           await engine.reload('Llama-3.2-3B-Instruct-q4f16_1-MLC')
 
           set({
@@ -111,14 +109,18 @@ const useChatStore = create<ChatState>()(
             content,
             timestamp: new Date(),
           }
-          const chatMessages = [
-            { role: 'system', content: SYSTEM_PROMPT },
-            ...messages.map((msg) => ({
-              role: msg.role,
-              content:
-                msg.role === 'user' && context
-                  ? `DATOS DE WALLETFY: ${JSON.stringify(context, null, 2)}\n\nPREGUNTA: ${msg.content}`
-                  : msg.content,
+
+          // Construir mensajes con tipos explícitos para WebLLM
+          const chatMessages: webllm.ChatCompletionMessageParam[] = [
+            {
+              role: 'system' as const,
+              content: SYSTEM_PROMPT,
+            },
+            ...messages.map((msg): webllm.ChatCompletionMessageParam => ({
+              role: msg.role as 'user' | 'assistant',
+              content: msg.role === 'user' && context
+                ? `DATOS DE WALLETFY: ${JSON.stringify(context, null, 2)}\n\nPREGUNTA: ${msg.content}`
+                : msg.content,
             })),
             {
               role: 'user' as const,
