@@ -71,7 +71,7 @@ const useChatStore = create<ChatState>()(
             set({ loadingProgress: percentage })
           })
           
-          await engine.reload('Llama-3.2-3B-Instruct-q4f16_1-MLC')
+          await engine.reload('Llama-3.2-1B-Instruct-q4f32_1-MLC')
 
           set({
             engine,
